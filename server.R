@@ -4,6 +4,8 @@ library(DT)
 library(broom)
 library(psych)
 
+options(warn =-1)
+
 shinyServer(function(input, output) {
   
   ####### Reactive ##########
@@ -39,7 +41,7 @@ shinyServer(function(input, output) {
     
   })
   
-  ####### Output ##########
+  ####### Output for correlation poge ##########
   
   output$summary_lm <- renderPrint({ 
     summary(safetydata_m()) 
@@ -63,7 +65,7 @@ shinyServer(function(input, output) {
       add_text(text = safetydata()[,countryName], color= I("black"),
                textposition = "top right", name ="country Name", visible = "legendonly")  %>%
       
-      add_markers(showlegend = FALSE, name = "",
+      add_markers(showlegend = FALSE, name = " ",
                   marker = list(size = 10,
                                 color = 'rgba(0, 0, 0, .0)',
                                 line = list(color = ifelse(safetydata_cook() > quantile(safetydata_cook(),.90),'rgba(152, 0, 0, .5)','rgba(0, 0, 0, .5)'),
@@ -111,7 +113,7 @@ shinyServer(function(input, output) {
     
     safetydata <- safetydata()
     
-    safetydata$Residules <- safetydata_m()$residuals
+    safetydata$Residuals <- safetydata_m()$residuals
     safetydata$Cooks <- safetydata_cook()
     
     safetydata
@@ -153,4 +155,8 @@ shinyServer(function(input, output) {
                 
     ))
   })
+  
+  
+  
+  ####### Output for time series poge ##########
 })

@@ -41,7 +41,7 @@ shinyUI(
                    column(8,
                           tabsetPanel(
                             tabPanel( "Scatter Plot", fluidRow(plotlyOutput('distPlot', height = 500), DT::dataTableOutput('dispData') )),
-                            tabPanel( "Residule Plot", plotlyOutput('residualPlot', height = 500), p("")  ),
+                            tabPanel( "Residual Plot", plotlyOutput('residualPlot', height = 500), p("")  ),
                             tabPanel( "Summary", 
                                       tags$br(),
                                       tags$b("Spearman's rank correlation rho"),
@@ -67,7 +67,12 @@ shinyUI(
       ),
       
       tabPanel("Time Series",
-               p("Soon... Nothing but blank page...")
+               
+               fluidPage(
+                 fluidRow(
+                      p("Soon... Nothing but blank page...")
+                 )
+               )
       ),
 
       tabPanel("Help",
