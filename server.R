@@ -63,9 +63,9 @@ shinyServer(function(input, output) {
     plot_ly(x = safetydata()[,columnX],y = safetydata()[,columnY], text = safetydata()[,countryName]) %>%  
       
       add_text(text = safetydata()[,countryName], color= I("black"),
-               textposition = "top right", name ="country Name", visible = "legendonly")  %>%
+               textposition = "top right", name ="Country Name", visible = "legendonly")  %>%
       
-      add_markers(showlegend = FALSE, name = " ",
+      add_markers(showlegend = TRUE, name = "Country",
                   marker = list(size = 10,
                                 color = 'rgba(0, 0, 0, .0)',
                                 line = list(color = ifelse(safetydata_cook() > quantile(safetydata_cook(),.90),'rgba(152, 0, 0, .5)','rgba(0, 0, 0, .5)'),
@@ -93,15 +93,18 @@ shinyServer(function(input, output) {
     columnX <- input$IndicatorX
     columnY <- input$IndicatorY
     
-    plot_ly(x =  safetydata_m()$fitted.values,y =  safetydata_m()$residuals, color = I("black"), type = 'scatter', 
-            mode = 'text',  text = safetydata()[,countryName],
-            textposition = "top right", name ="country Name") %>%  
+    
+    plot_ly(x = safetydata_m()$fitted.values,y = safetydata_m()$residuals, text = safetydata()[,countryName]) %>%    
       
-      add_markers(showlegend = FALSE, 
+      
+      add_markers(showlegend = TRUE, name = "Country",
                   marker = list(size = 10,
                                 color = 'rgba(0, 0, 0, .0)',
                                 line = list(color = ifelse(safetydata_cook() > quantile(safetydata_cook(),.90),'rgba(152, 0, 0, .5)','rgba(0, 0, 0, .5)'),
                                             width = 2)))  %>%
+      
+      add_text(text = safetydata()[,countryName], color= I("black"),
+               textposition = "top right", name ="Country Name", visible = "legendonly")  %>%
       
       layout(xaxis = list(title = 'Fitted Value - Linear Line'),
              yaxis = list(title = 'Residuals'),
@@ -148,10 +151,10 @@ shinyServer(function(input, output) {
   })
   
   output$dispDL <- renderText({
-    HTML(paste0('<a href="combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
-                ' <a href="combined2005.csv" class="btn btn-primary btn-sm">2005</a>',
-                ' <a href="combined2010.csv" class="btn btn-primary btn-sm">2010</a>',
-                ' <a href="combined2015.csv" class="btn btn-primary btn-sm">2015</a>'
+    HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
+                ' <a href="data/combined2005.csv" class="btn btn-primary btn-sm">2005</a>',
+                ' <a href="data/combined2010.csv" class="btn btn-primary btn-sm">2010</a>',
+                ' <a href="data/combined2015.csv" class="btn btn-primary btn-sm">2015</a>'
                 
     ))
   })
