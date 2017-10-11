@@ -17,9 +17,9 @@ shinyUI(
                  fluidRow(
                    column(3,
                           sidebarPanel( width=12, tags$b("Choose: Year and Indicators"),
-                                        selectInput('year', 'Year', c('2000', '2005', '2010', '2015'), selected = '2015'),
-                                        selectInput('IndicatorX', 'X: Indicator', c( names(safetydata)), selected = 'transport_injuries'),
-                                        selectInput('IndicatorY', 'Y: Indicator', c( names(safetydata)), selected = 'ul_safety_index')
+                                        selectizeInput('year', 'Year', c('2000', '2005', '2010', '2015'), selected = '2015'),
+                                        selectizeInput('IndicatorX', 'X: Indicator', c( names(safetydata)), selected = 'transport_injuries'),
+                                        selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)), selected = 'ul_safety_index')
                           ),
                           
                           sidebarPanel( width=12, 
@@ -40,7 +40,7 @@ shinyUI(
                    
                    column(8,
                           tabsetPanel(
-                            tabPanel( "Scatter Plot", fluidRow(plotlyOutput('distPlot', height = 500), DT::dataTableOutput('dispData') )),
+                            tabPanel( "Scatter Plot", fluidRow(plotlyOutput('distPlot', height = 500),dataTableOutput('dispData') )),
                             tabPanel( "Residual Plot", plotlyOutput('residualPlot', height = 500), p("")  ),
                             tabPanel( "Summary", 
                                       tags$br(),
@@ -58,21 +58,62 @@ shinyUI(
                  )
                )
                
-               
-
-               
-               
-           
                       
       ),
       
-      tabPanel("Time Series",
-               
-               fluidPage(
-                 fluidRow(
-                      p("Soon... Nothing but blank page...")
-                 )
+      #navbarMenu("Time Series",
+      tabPanel("Time Series",         
+               #tabPanel("By Country",
+                        
+                fluidPage(
+                  column(3,
+                    
+                    sidebarPanel( width=12, selectizeInput('ts_countries', label= "Select: Country", choices = safetydata$country_slug, 
+                                                           selected = NULL, multiple = FALSE)),
+                    sidebarPanel( width=12, 
+                                  tags$b("Download Dataset .CSV"),
+                                  tags$br(),
+                                  htmlOutput("dispDL2")
+                                  
+                    )
+                    
+                  ),
+                  
+                  column(8,
+                    
+                    tabsetPanel(
+                      tabPanel( "Index & Drivers", tags$br(), 
+                                plotlyOutput('ts_idx'), 
+                                tags$br(),
+                                tags$h4("Ranking"),
+                                dataTableOutput('dispTStableIdx')),
+                      
+                      tabPanel( "Instution and Resources & Indicators", tags$br(), 
+                                plotlyOutput('ts_institutions_resources'), 
+                                tags$br(),
+                                tags$h4("Ranking"),
+                                dataTableOutput('dispTStableIR')),
+                      
+                      tabPanel( "Safety Outcome & Indicators",  tags$br(), 
+                                plotlyOutput('ts_outcome') ,
+                                tags$br(),
+                                tags$h4("Ranking"),
+                                dataTableOutput('dispTStableSO')                           
+                                ),
+                      tabPanel( "Safety Framework & Indicators",   tags$br(), 
+                                plotlyOutput('ts_safety_frameworks'), 
+                                tags$br(),
+                                tags$h4("Ranking"),
+                                dataTableOutput('dispTStableSF')
+                                )
+                    )   
+                    
+                  )
+                 
+               #  )
                )
+
+               
       ),
 
       tabPanel("Help",
