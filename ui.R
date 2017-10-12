@@ -18,8 +18,8 @@ shinyUI(
                    column(3,
                           sidebarPanel( width=12, tags$b("Choose: Year and Indicators"),
                                         selectizeInput('year', 'Year', c('2000', '2005', '2010', '2015'), selected = '2015'),
-                                        selectizeInput('IndicatorX', 'X: Indicator', c( names(safetydata)), selected = 'transport_injuries'),
-                                        selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)), selected = 'ul_safety_index')
+                                        selectizeInput('IndicatorX', 'X: Indicator', c( names(safetydata)[4:40]), selected = 'transport_injuries'),
+                                        selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)[4:40]), selected = 'ul_safety_index')
                           ),
                           
                           sidebarPanel( width=12, 

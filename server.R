@@ -55,7 +55,19 @@ shinyServer(function(input, output) {
     print(safetydata_cor())
   }) 
   
-  output$view <- DT::renderDataTable({ data() })
+  output$view <- DT::renderDataTable(
+    data(),
+    rownames = FALSE,
+    filter = 'top',
+    options=list(dom = 'Bfrtlip', buttons = list( 
+                                          I('colvis'),
+                                          list(
+                                            extend = 'collection',
+                                            buttons = c('csv', 'excel'),
+                                            text = 'Download')), 
+    scrollX = TRUE,  colReorder = TRUE, pageLength = 10, lengthMenu = c(10, 25 ,50, 100,200)),
+    extensions = c('Buttons','FixedColumns','ColReorder')
+    )
   
    
   output$distPlot <- renderPlotly({
@@ -116,16 +128,22 @@ shinyServer(function(input, output) {
     
   })
   
-  output$dispData <- DT::renderDataTable({
+  output$dispData <- DT::renderDataTable(
     
-    safetydata <- safetydata()
     
+    
+    {safetydata <- safetydata()
+    
+  
     safetydata$Residuals <- safetydata_m()$residuals
     safetydata$Cooks <- safetydata_cook()
     
-    safetydata
+    safetydata},
+    rownames = FALSE,
+    options=list(dom = 'frtlip', scrollX = TRUE, colReorder = TRUE, pageLength = 10, lengthMenu = c(10, 25 ,50, 100,200)),
+    extensions = c('ColReorder')
 
-  })
+  )
  
   output$dispDataTitle <- renderText({
     HTML(paste0("<b>Displaying : ",input$year," Data </b>"))
@@ -251,7 +269,14 @@ shinyServer(function(input, output) {
   output$dispTStableIdx <- DT::renderDataTable(
     tsdata()[,c('year','country_slug','ul_safety_index_rank','institutions_resources_rank','safety_outcomes_rank',
                 'safety_frameworks_rank')],
-    options=list(lengthChange = FALSE)
+    rownames = FALSE,
+    options=list(lengthChange = FALSE,  dom = 'Bfrtip', buttons = list( 
+      I('colvis'),
+      list(
+        extend = 'collection',
+        buttons = c('csv', 'excel'),
+        text = 'Download')), scrollX = TRUE,  colReorder = TRUE),
+    extensions = c('Buttons','FixedColumns','ColReorder')
   )
  
   output$dispTStableSO <- DT::renderDataTable(
@@ -259,20 +284,40 @@ shinyServer(function(input, output) {
     tsdata()[,c('year','country_slug','safety_outcomes_rank', 'transport_injuries_rating_rank','falls_rating_rank','drowning_rating_rank',
                 'fires_heat_hot_substances_rating_rank','poisonings_rating_rank','exposure_to_mechanical_forces_rating_rank',
                 'foreign_body_rating_rank','other_unintentional_injuries_rating_rank','exposure_to_forces_of_nature_disaster_rating_rank')],
-    options=list(lengthChange = FALSE)
-
+    rownames = FALSE,
+    options=list(lengthChange = FALSE,  dom = 'Bfrtip', buttons = list( 
+                                                                  I('colvis'),
+                                                                  list(
+                                                                    extend = 'collection',
+                                                                    buttons = c('csv', 'excel'),
+                                                                    text = 'Download')), scrollX = TRUE, colReorder = TRUE),
+    extensions = c('Buttons','FixedColumns','ColReorder')
   )
   
   output$dispTStableSF <- DT::renderDataTable(
     tsdata()[,c('year','country_slug','safety_frameworks_rank','ul_standards_index_rating_rank',
                 'consumer_protection_survey_rating_rank','ul_labor_rights_index_rating_rank')],
-    options=list(lengthChange = FALSE)
-  )
+    rownames = FALSE,
+    options=list(lengthChange = FALSE,  dom = 'Bfrtip', buttons = list( 
+                                          I('colvis'),
+                                          list(
+                                            extend = 'collection',
+                                            buttons = c('csv', 'excel'),
+                                            text = 'Download')), scrollX = TRUE, colReorder = TRUE),
+                                        extensions = c('Buttons','FixedColumns','ColReorder')
+                                      )
   
   output$dispTStableIR <- DT::renderDataTable(
     tsdata()[,c('year','country_slug','institutions_resources_rank','gdp_per_capita_rating_rank',
                 'government_effectiveness_rating_rank','education_rating_rank','network_readiness_rating_rank')],
-    options=list(lengthChange = FALSE)
+    rownames = FALSE,
+    options=list(lengthChange = FALSE,  dom = 'Bfrtip', buttons = list( 
+                                                                    I('colvis'),
+                                                                    list(
+                                                                      extend = 'collection',
+                                                                      buttons = c('csv', 'excel'),
+                                                                      text = 'Download')), scrollX = TRUE, colReorder = TRUE),
+    extensions = c('Buttons','FixedColumns','ColReorder')
   )
   
   output$dispDL2 <- renderText({
