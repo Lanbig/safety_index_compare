@@ -18,8 +18,8 @@ shinyUI(
                    column(3,
                           sidebarPanel( width=12, tags$b("Choose: Year and Indicators"),
                                         selectizeInput('year', 'Year', c('2000', '2005', '2010', '2015'), selected = '2015'),
-                                        selectizeInput('IndicatorX', 'X: Indicator', c( names(safetydata)[4:41]), selected = 'transport_injuries'),
-                                        selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)[4:41]), selected = 'ul_safety_index')
+                                        selectizeInput('IndicatorX', 'X: Indicator', c( names(safetydata)[4:42]), selected = 'transport_injuries'),
+                                        selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)[4:42]), selected = 'ul_safety_index')
                           ),
                           
                           sidebarPanel( width=12, 
@@ -47,18 +47,39 @@ shinyUI(
                                       tags$b("Spearman's rank correlation rho"),
                                       verbatimTextOutput("summary_cor"), 
                                       tags$b("Linear Regression"),
-                                      verbatimTextOutput("summary_lm")),
-                            tabPanel( "Dataset", 
-                                      tags$br(),
-                                      htmlOutput("dispDataTitle"),
-                                      tags$br(),
-                                      dataTableOutput("view"))
+                                      verbatimTextOutput("summary_lm"))
+
                           ) 
                    )
                  )
                )
                
-                      
+      ),
+      
+      tabPanel("Data Query Tool",
+               fluidPage(
+                 fluidRow(
+                   column(3,
+                          sidebarPanel( width=12, tags$b("Choose: Year"),
+                                        selectizeInput('qtyear', 'Year', c('2000', '2005', '2010', '2015'), selected = '2015')
+                          ),
+                          
+                          sidebarPanel( width=12, 
+                                        tags$b("Download full Dataset .CSV"),
+                                        tags$br(),
+                                        htmlOutput("dispDL3")
+                                        
+                          )
+                   ),
+                   column(8,
+                          tabPanel( "Dataset", 
+                                    tags$br(),
+                                    htmlOutput("dispDataTitle"),
+                                    tags$br(),
+                                    dataTableOutput("view"))
+                   )  
+                 )
+               )
       ),
       
       #navbarMenu("Time Series",
@@ -114,10 +135,6 @@ shinyUI(
                )
 
                
-      ),
-
-      tabPanel("Help",
-               p("Nothing but blank page....")
       )
           
 

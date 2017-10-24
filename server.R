@@ -55,20 +55,6 @@ shinyServer(function(input, output) {
     print(safetydata_cor())
   }) 
   
-  output$view <- DT::renderDataTable(
-    data(),
-    rownames = FALSE,
-    filter = 'top',
-    options=list(dom = 'Bfrtlip', buttons = list( 
-                                          I('colvis'),
-                                          list(
-                                            extend = 'collection',
-                                            buttons = c('csv', 'excel'),
-                                            text = 'Download')), 
-    scrollX = TRUE,  colReorder = TRUE, pageLength = 10, lengthMenu = c(10, 25 ,50, 100,200)),
-    extensions = c('Buttons','FixedColumns','ColReorder')
-    )
-  
    
   output$distPlot <- renderPlotly({
     
@@ -144,10 +130,6 @@ shinyServer(function(input, output) {
     extensions = c('ColReorder')
 
   )
- 
-  output$dispDataTitle <- renderText({
-    HTML(paste0("<b>Displaying : ",input$year," Data </b>"))
-  })
 
   output$dispCor <- renderText({
     HTML(paste0("<br />
@@ -321,6 +303,54 @@ shinyServer(function(input, output) {
   )
   
   output$dispDL2 <- renderText({
+    HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
+                ' <a href="data/combined2005.csv" class="btn btn-primary btn-sm">2005</a>',
+                ' <a href="data/combined2010.csv" class="btn btn-primary btn-sm">2010</a>',
+                ' <a href="data/combined2015.csv" class="btn btn-primary btn-sm">2015</a>'
+                
+    ))
+  })
+
+  
+  ####### Reactive ##########
+  qtdata <- reactive({
+    year <- input$qtyear
+    inputfile <- paste('combined',year,'.csv', sep = "")
+    print(inputfile)
+    data <- read.csv(inputfile, na.strings = "NULL")
+  })
+  
+  output$view <- DT::renderDataTable(
+    qtdata(),
+    rownames = FALSE,
+    filter = 'top',
+    options=list(dom = 'Bfrtlip', buttons = list( 
+      I('colvis'),
+      
+      list(
+        extend = 'collection',
+        buttons = c('csv', 'excel'),
+        text = 'Download')), 
+      
+      scrollX = TRUE,  
+      colReorder = TRUE, 
+      pageLength = 50, 
+      lengthMenu = c(10, 25 ,50, 100,200),
+      
+      columnDefs = list(
+        list(targets = {c(0,1,7:43,45:64)}, visible = FALSE)
+      )
+      
+      ),
+    
+    extensions = c('Buttons','FixedColumns','ColReorder')
+  )
+  
+  output$dispDataTitle <- renderText({
+    HTML(paste0("<b>Displaying : ",input$qtyear," Data </b>"))
+  })
+  
+  output$dispDL3 <- renderText({
     HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
                 ' <a href="data/combined2005.csv" class="btn btn-primary btn-sm">2005</a>',
                 ' <a href="data/combined2010.csv" class="btn btn-primary btn-sm">2010</a>',
