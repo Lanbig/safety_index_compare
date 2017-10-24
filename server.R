@@ -227,7 +227,8 @@ shinyServer(function(input, output) {
       add_trace(y = ~ul_standards_index_rating*100, name = 'ul_standards_index_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
       add_trace(y = ~consumer_protection_survey_rating*100, name = 'consumer_protection_survey_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
       add_trace(y = ~ul_labor_rights_index_rating*100, name = 'ul_labor_rights_index_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-
+      add_trace(y = ~road_safety_rating*100, name = 'road_safety_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      
     layout(title = paste0("Safety Frameworks Score for ", input$ts_countries),
            yaxis = list(title = "Safety Frameworks - Indicators", range = c(0,105)),
            xaxis = list (title = "", type='category'),
@@ -278,7 +279,7 @@ shinyServer(function(input, output) {
   
   output$dispTStableSF <- DT::renderDataTable(
     tsdata()[,c('year','country_slug','safety_frameworks_rank','ul_standards_index_rating_rank',
-                'consumer_protection_survey_rating_rank','ul_labor_rights_index_rating_rank')],
+                'consumer_protection_survey_rating_rank','ul_labor_rights_index_rating_rank','road_safety_rating_rank')],
     rownames = FALSE,
     options=list(lengthChange = FALSE,  dom = 'Bfrtip', buttons = list( 
                                           I('colvis'),
