@@ -339,7 +339,7 @@ shinyServer(function(input, output) {
       lengthMenu = c(10, 25 ,50, 100,200),
       
       columnDefs = list(
-        list(targets = {c(0,1,7:43,45:64)}, visible = FALSE)
+        list(targets = {c(0,1,7:43,45:72)}, visible = FALSE)
       )
       
       ),
