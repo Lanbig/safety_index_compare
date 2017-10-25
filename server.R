@@ -86,7 +86,7 @@ shinyServer(function(input, output) {
       
       layout(xaxis = list(title = columnX),
              yaxis = list(title = columnY),
-             legend = list(x = 0.80, y = 0.90)) 
+             legend = list(x = 0.80, y = ifelse(safetydata_cor()$estimate > 0, 0.10, 0.90) )) 
 
   })
   
