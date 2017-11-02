@@ -41,7 +41,11 @@ shinyServer(function(input, output) {
     
     columnX <- input$IndicatorX
     columnY <- input$IndicatorY
-    cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "spearman")
+    if(columnX == 'gdp_per_capita' | columnY == 'gdp_per_capita' | columnX == 'gdp_per_capita_rating' | columnY == 'gdp_per_capita_rating' )
+      cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "pearson")
+    else
+      cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "spearman")
+    
     
   })
   
@@ -132,8 +136,8 @@ shinyServer(function(input, output) {
   )
 
   output$dispCor <- renderText({
-    HTML(paste0("<br />
-                  <p>Selected Year : ",input$year,
+    HTML(paste0("<b>",safetydata_cor()['method'],"</b>",
+                "<br /><p>Selected Year : ",input$year,
                 "
                   </p><p>Selected Indicators : </p>
                   <ul>

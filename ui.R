@@ -22,10 +22,7 @@ shinyUI(
                                         selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)[4:42]), selected = 'ul_safety_index')
                           ),
                           
-                          sidebarPanel( width=12, 
-                                        tags$b("Result: Spearman's rank correlation rho "),
-                                        tags$br(),
-                                        htmlOutput("dispCor")
+                          sidebarPanel( width=12, htmlOutput("dispCor")
                                        
                           ),
                           
@@ -44,7 +41,7 @@ shinyUI(
                             tabPanel( "Residual Plot", plotlyOutput('residualPlot', height = 500), p("")  ),
                             tabPanel( "Summary", 
                                       tags$br(),
-                                      tags$b("Spearman's rank correlation rho"),
+                                      tags$b("Correlation"),
                                       verbatimTextOutput("summary_cor"), 
                                       tags$b("Linear Regression"),
                                       verbatimTextOutput("summary_lm"))
