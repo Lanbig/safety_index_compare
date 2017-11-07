@@ -38,15 +38,12 @@ shinyServer(function(input, output) {
   })
   
   safetydata_cor <- reactive({
-    
     columnX <- input$IndicatorX
     columnY <- input$IndicatorY
     if(columnX == 'gdp_per_capita' | columnY == 'gdp_per_capita' | columnX == 'gdp_per_capita_rating' | columnY == 'gdp_per_capita_rating' )
       cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "pearson")
     else
       cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "spearman")
-    
-    
   })
   
   ####### Output ##########
@@ -154,7 +151,11 @@ shinyServer(function(input, output) {
                   if(round(safetydata_cor()$p.value, digits = 4) <= 0.05)
                     "Passed"
                   else
-                    "Failed"
+                    "Failed",
+                
+                "<br/> <b>Number of Obs:</b> ",
+                  nrow(safetydata())
+                
                 ))
   })
   
