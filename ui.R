@@ -2,8 +2,11 @@ library(shiny)
 library(plotly)
 library(DT)
 library(shinythemes)
+require(here)
 
-safetydata <- read.csv("combined2015.csv")
+
+source(here("module_correlation/correlation.R"))
+source(here("module_ranking/rankingtable.R"))
 
 shinyUI(
   
@@ -11,47 +14,8 @@ shinyUI(
       
       theme = shinytheme("lumen"),
              
-      tabPanel("Correlation",
-      
-               fluidPage(
-                 fluidRow(
-                   column(3,
-                          sidebarPanel( width=12, tags$b("Choose: Year and Indicators"),
-                                        selectizeInput('year', 'Year', c('2000', '2005', '2010', '2015'), selected = '2015'),
-                                        selectizeInput('IndicatorX', 'X: Indicator', c( names(safetydata)[4:42]), selected = 'transport_injuries'),
-                                        selectizeInput('IndicatorY', 'Y: Indicator', c( names(safetydata)[4:42]), selected = 'ul_safety_index')
-                          ),
-                          
-                          sidebarPanel( width=12, htmlOutput("dispCor")
-                                       
-                          ),
-                          
-                          sidebarPanel( width=12, 
-                                        tags$b("Download Dataset .CSV"),
-                                        tags$br(),
-                                        htmlOutput("dispDL")
-                                        
-                          )
-                          
-                   ),
-                   
-                   column(8,
-                          tabsetPanel(
-                            tabPanel( "Scatter Plot", fluidRow(plotlyOutput('distPlot', height = 500),dataTableOutput('dispData') )),
-                            tabPanel( "Residual Plot", plotlyOutput('residualPlot', height = 500), p("")  ),
-                            tabPanel( "Summary", 
-                                      tags$br(),
-                                      tags$b("Correlation"),
-                                      verbatimTextOutput("summary_cor"), 
-                                      tags$b("Linear Regression"),
-                                      verbatimTextOutput("summary_lm"))
-
-                          ) 
-                   )
-                 )
-               )
-               
-      ),
+      tabPanel("Correlation", correlationScatterUI("corr")),
+      tabPanel("Ranking", rankingTableUI("ranking")),
       
       tabPanel("Data Query Tool",
                fluidPage(

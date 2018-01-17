@@ -1,163 +1,41 @@
-library(shiny)
-library(plotly)
-library(DT)
-library(broom)
-library(psych)
-library(sqldf)
+require(shiny)
+require(plotly)
+require(DT)
+require(broom)
+require(psych)
+require(sqldf)
+require(here)
+
+source(here("module_correlation/correlation.R"))
+source(here("module_ranking/rankingtable.R"))
 
 options(warn =-1)
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
-  
-  ####### Output for correlation page ##########
-  
-  ####### Reactive ##########
-  data <- reactive({
+  # Reactive 
+  dataFile <- reactive({
     year <- input$year
-    inputfile <- paste('combined',year,'.csv', sep = "")
+    inputfile <- paste(here('asset/datasets/UL_safety_index_data_'),year,'.csv', sep = "")
     print(inputfile)
     data <- read.csv(inputfile, na.strings = "NULL")
   })
   
-  safetydata <- reactive( {
-    columnX <- input$IndicatorX
-    columnY <- input$IndicatorY
-    countryName <- 'country_slug'
-    
-    safetydata <- data()[, c(countryName, columnY, columnX)]
-    safetydata <- safetydata[complete.cases(safetydata), ]
-  })
+  callModule(correlationScatter, "corr", dataFile)
+  callModule(rankingTable,"ranking", dataFile)
   
-  safetydata_m <- reactive({
-      safetydata_m <- lm(safetydata()[-1])
-    })
   
-  safetydata_cook <- reactive({
-    cooks = cooks.distance(safetydata_m())
-  })
-  
-  safetydata_cor <- reactive({
-    columnX <- input$IndicatorX
-    columnY <- input$IndicatorY
-    if(columnX == 'gdp_per_capita' | columnY == 'gdp_per_capita' | columnX == 'gdp_per_capita_rating' | columnY == 'gdp_per_capita_rating' )
-      cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "pearson")
-    else
-      cor <- cor.test(safetydata()[,columnX], safetydata()[,columnY], method = "spearman")
-  })
   
   ####### Output ##########
   
-  output$summary_lm <- renderPrint({ 
-    summary(safetydata_m()) 
-  }) 
-  
-  output$summary_cor <- renderPrint({ 
-    print(safetydata_cor())
-  }) 
-  
-   
-  output$distPlot <- renderPlotly({
-    
-    columnX <- input$IndicatorX
-    columnY <- input$IndicatorY
-    countryName <- 'country_slug'
-    
-    plot_ly(x = safetydata()[,columnX],y = safetydata()[,columnY], text = safetydata()[,countryName]) %>%  
-      
-      add_text(text = safetydata()[,countryName], color= I("black"),
-               textposition = "top right", name ="Country Name", visible = "legendonly")  %>%
-      
-      add_markers(showlegend = TRUE, name = "Country",
-                  marker = list(size = 10,
-                                color = 'rgba(0, 0, 0, .0)',
-                                line = list(color = ifelse(safetydata_cook() > quantile(safetydata_cook(),.90),'rgba(152, 0, 0, .5)','rgba(0, 0, 0, .5)'),
-                                            width = 2)))  %>%
-      
-      add_lines(y = ~fitted(lm(safetydata()[,columnY] ~ safetydata()[,columnX])),
-                line = list(color = 'rgba(7, 16 181, 1)'),
-                name = "Linear Line") %>%
-      
-      add_ribbons(data = augment(safetydata_m()),
-                  ymin = ~.fitted - 1.96 * .se.fit,
-                  ymax = ~.fitted + 1.96 * .se.fit,
-                  line = list(color = 'rgba(7, 164, 181, 0.05)'),
-                  fillcolor = 'rgba(7, 164, 181, 0.2)',
-                  name = "Standard Error", visible = "legendonly") %>%
-      
-      layout(xaxis = list(title = columnX),
-             yaxis = list(title = columnY),
-             legend = list(x = 0.80, y = ifelse(safetydata_cor()$estimate > 0, 0.10, 0.90) )) 
 
-  })
   
-  output$residualPlot <- renderPlotly({
-    countryName <- 'country_slug'
-    columnX <- input$IndicatorX
-    columnY <- input$IndicatorY
-    
-    
-    plot_ly(x = safetydata_m()$fitted.values,y = safetydata_m()$residuals, text = safetydata()[,countryName]) %>%    
-      
-      
-      add_markers(showlegend = TRUE, name = "Country",
-                  marker = list(size = 10,
-                                color = 'rgba(0, 0, 0, .0)',
-                                line = list(color = ifelse(safetydata_cook() > quantile(safetydata_cook(),.90),'rgba(152, 0, 0, .5)','rgba(0, 0, 0, .5)'),
-                                            width = 2)))  %>%
-      
-      add_text(text = safetydata()[,countryName], color= I("black"),
-               textposition = "top right", name ="Country Name", visible = "legendonly")  %>%
-      
-      layout(xaxis = list(title = 'Fitted Value - Linear Line'),
-             yaxis = list(title = 'Residuals'),
-             legend = list(x = 0.80, y = 0.90)) 
-    
-  })
-  
-  output$dispData <- DT::renderDataTable(
-    
-    
-    
-    {safetydata <- safetydata()
-    
-  
-    safetydata$Residuals <- safetydata_m()$residuals
-    safetydata$Cooks <- safetydata_cook()
-    
-    safetydata},
-    rownames = FALSE,
-    options=list(dom = 'frtlip', scrollX = TRUE, colReorder = TRUE, pageLength = 10, lengthMenu = c(10, 25 ,50, 100,200)),
-    extensions = c('ColReorder')
 
-  )
+  
+  
 
-  output$dispCor <- renderText({
-    HTML(paste0("<b>",safetydata_cor()['method'],"</b>",
-                "<br /><p>Selected Year : ",input$year,
-                "
-                  </p><p>Selected Indicators : </p>
-                  <ul>
-                  <li>",input$IndicatorX,"</li>
-                  <li>",input$IndicatorY,"</li>
-                  </ul>", 
-                
-                "<b>Correlation Coefficient:</b> ",
-                round(safetydata_cor()$estimate, digits = 4),                 
-                "<br/> <b>P-Value:</b> ",
-                round(safetydata_cor()$p.value, digits = 3), 
-                "<br/> <b>Tests of Significance:</b> ",
-                      
-                  if(round(safetydata_cor()$p.value, digits = 4) <= 0.05)
-                    "Passed"
-                  else
-                    "Failed",
-                
-                "<br/> <b>Number of Obs:</b> ",
-                  nrow(safetydata())
-                
-                ))
-  })
+  
+
   
   output$dispDL <- renderText({
     HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
