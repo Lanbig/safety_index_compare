@@ -57,7 +57,7 @@ correlationScatterUI <- function(id) {
 }
 
 # Logic and Calculation
-correlationScatter <- function(input, output, session, dataFile) {
+correlationScatter <- function(input, output, session) {
   
   dataFile <- reactive({
     year <- input$year

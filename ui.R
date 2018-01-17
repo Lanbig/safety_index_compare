@@ -3,6 +3,7 @@ library(plotly)
 library(DT)
 library(shinythemes)
 require(here)
+require(dplyr)
 
 
 source(here("module_correlation/correlation.R"))
@@ -15,7 +16,7 @@ shinyUI(
       theme = shinytheme("lumen"),
              
       tabPanel("Correlation", correlationScatterUI("corr")),
-      tabPanel("Ranking", rankingTableUI("ranking")),
+      tabPanel("Ranking Compare", rankingTableUI("rank")),
       
       tabPanel("Data Query Tool",
                fluidPage(

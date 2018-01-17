@@ -5,6 +5,7 @@ require(broom)
 require(psych)
 require(sqldf)
 require(here)
+require(dplyr)
 
 source(here("module_correlation/correlation.R"))
 source(here("module_ranking/rankingtable.R"))
@@ -13,29 +14,10 @@ options(warn =-1)
 
 shinyServer(function(input, output, session) {
   
-  # Reactive 
-  dataFile <- reactive({
-    year <- input$year
-    inputfile <- paste(here('asset/datasets/UL_safety_index_data_'),year,'.csv', sep = "")
-    print(inputfile)
-    data <- read.csv(inputfile, na.strings = "NULL")
-  })
-  
-  callModule(correlationScatter, "corr", dataFile)
-  callModule(rankingTable,"ranking", dataFile)
-  
-  
+  callModule(correlationScatter, "corr")
+  callModule(rankingTable, "rank")
   
   ####### Output ##########
-  
-
-  
-
-  
-  
-
-  
-
   
   output$dispDL <- renderText({
     HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
