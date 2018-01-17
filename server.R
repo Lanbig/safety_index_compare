@@ -204,51 +204,51 @@ shinyServer(function(input, output) {
       add_trace(y = ~safety_outcomes, name = 'safety_outcomes', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
       
       layout(title = paste0("Safety Index Score for ", input$ts_countries),
-             yaxis = list(title = "Safety Index - Indicators", range = c(0,105)),
+             yaxis = list(title = "Safety Index - Indicators"),
              xaxis = list (title = "", type='category'),
              legend = list(orientation = 'h'))
   })
   
   output$ts_outcome <- renderPlotly({
     plot_ly(tsdata(), x = ~year, y = ~safety_outcomes, name = 'safety_outcomes',  line = list(width = 4), type = 'scatter', mode = 'lines+markers') %>%
-      add_trace(y = ~transport_injuries_rating*100, name = 'transport_injuries_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~falls_rating*100, name = 'falls_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~drowning_rating*100, name = 'drowning_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~fires_heat_hot_substances_rating*100, name = 'fires_heat_hot_substances_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~poisonings_rating*100, name = 'poisonings_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~exposure_to_mechanical_forces_rating*100, name = 'exposure_to_mechanical_forces_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~foreign_body_rating*100, name = 'foreign_body_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~other_unintentional_injuries_rating*100, name = 'other_unintentional_injuries_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~exposure_to_forces_of_nature_disaster_rating*100, name = 'nature_disaster_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~transport_injuries_rating, name = 'transport_injuries_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~falls_rating, name = 'falls_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~drowning_rating, name = 'drowning_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~fires_heat_hot_substances_rating, name = 'fires_heat_hot_substances_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~poisonings_rating, name = 'poisonings_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~exposure_to_mechanical_forces_rating, name = 'exposure_to_mechanical_forces_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~foreign_body_rating, name = 'foreign_body_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~other_unintentional_injuries_rating, name = 'other_unintentional_injuries_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~exposure_to_forces_of_nature_disaster_rating, name = 'nature_disaster_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
   
     layout(title = paste0("Safety Outcomes Score for ", input$ts_countries),
-           yaxis = list(title = "Safety Outcomes - Indicators", range = c(0,105)),
+           yaxis = list(title = "Safety Outcomes - Indicators"),
            xaxis = list (title = "", type='category'),
            legend = list(orientation = 'h'))
   })
 
   output$ts_safety_frameworks <- renderPlotly({
     plot_ly(tsdata(), x = ~year, y = ~safety_frameworks, name = 'safety_frameworks', line = list(width = 4), type = 'scatter', mode = 'lines+markers') %>%
-      add_trace(y = ~ul_standards_index_rating*100, name = 'ul_standards_index_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~consumer_protection_survey_rating*100, name = 'consumer_protection_survey_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~ul_labor_rights_index_rating*100, name = 'ul_labor_rights_index_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~road_safety_rating*100, name = 'road_safety_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~ul_standards_index_rating, name = 'ul_standards_index_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~consumer_protection_survey_rating, name = 'consumer_protection_survey_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~ul_labor_rights_index_rating, name = 'ul_labor_rights_index_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~road_safety_rating, name = 'road_safety_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
       
     layout(title = paste0("Safety Frameworks Score for ", input$ts_countries),
-           yaxis = list(title = "Safety Frameworks - Indicators", range = c(0,105)),
+           yaxis = list(title = "Safety Frameworks - Indicators"),
            xaxis = list (title = "", type='category'),
            legend = list(orientation = 'h'))
   })
 
   output$ts_institutions_resources <- renderPlotly({
     plot_ly(tsdata(), x = ~year, y = ~institutions_resources, name = 'institutions_resources', line = list(width = 4),  type = 'scatter', mode = 'lines+markers') %>%
-      add_trace(y = ~gdp_per_capita_rating*100, name = 'gdp_per_capita_rating',  line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~government_effectiveness_rating*100, name = 'government_effectiveness_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~education_rating*100, name = 'education_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
-      add_trace(y = ~network_readiness_rating*100, name = 'network_readiness_rating',  line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~gdp_per_capita_rating, name = 'gdp_per_capita_rating',  line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~government_effectiveness_rating, name = 'government_effectiveness_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~education_rating, name = 'education_rating', line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
+      add_trace(y = ~network_readiness_rating, name = 'network_readiness_rating',  line = list(width = 2, dash = 'dot'), mode='lines+markers') %>%
     
     layout(title = paste0("Institutions Resources Score for ", input$ts_countries),
-           yaxis = list(title = "Institutions Resources - Indicators", range = c(0,105)),
+           yaxis = list(title = "Institutions Resources - Indicators"),
            xaxis = list (title = "", type='category'),
            legend = list(orientation = 'h')
     )
