@@ -7,8 +7,9 @@ require(sqldf)
 require(here)
 require(dplyr)
 
-source(here("module_correlation/correlation.R"))
-source(here("module_ranking/rankingtable.R"))
+setwd("/srv/shiny-server/Shiny")
+source("module_correlation/correlation.R")
+source("module_ranking/rankingtable.R")
 
 options(warn =-1)
 

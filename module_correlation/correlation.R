@@ -6,8 +6,9 @@ require(psych)
 require(sqldf)
 require(here)
 
+setwd("/srv/shiny-server/Shiny")
 # Load dataset for listing indicators 
-safetydata <- read.csv(here('asset/datasets/UL_safety_index_data_2017.csv'))
+safetydata <- read.csv('asset/datasets/UL_safety_index_data_2017.csv')
 
 # Correlation User Interface
 correlationScatterUI <- function(id) {
@@ -62,7 +63,7 @@ correlationScatter <- function(input, output, session) {
   dataFile <- reactive({
     year <- input$year
     cat(year)
-    inputfile <- paste(here('asset/datasets/UL_safety_index_data_'),year,'.csv', sep = "")
+    inputfile <- paste('asset/datasets/UL_safety_index_data_',year,'.csv', sep = "")
     print(inputfile)
     data <- read.csv(inputfile, na.strings = "NULL")
   })
