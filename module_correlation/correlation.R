@@ -33,7 +33,7 @@ correlationScatterUI <- function(id) {
              # Download box
              sidebarPanel( width = 12, tags$b("Download Dataset .CSV"),
                            tags$br(),
-                           htmlOutput("dispDL")
+                           htmlOutput(ns("dispDL"))
              )
              
       ),
@@ -201,4 +201,13 @@ correlationScatter <- function(input, output, session) {
   output$summary_cor <- renderPrint({ 
     print(safetydata_cor())
   }) 
+  
+  output$dispDL <- renderText({
+    HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
+                ' <a href="data/combined2005.csv" class="btn btn-primary btn-sm">2005</a>',
+                ' <a href="data/combined2010.csv" class="btn btn-primary btn-sm">2010</a>',
+                ' <a href="data/combined2015.csv" class="btn btn-primary btn-sm">2015</a>'
+    ))
+    
+  })
 }

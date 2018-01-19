@@ -19,6 +19,18 @@ rankingTableUI <- function(id) {
     # Compare by Peer Group UI
     tabsetPanel(  
       
+      # Compare the country over the time
+      tabPanel( "Rank over Time", tags$br(), 
+                column(12,
+                       wellPanel(
+                         fluidRow(
+                           column( width = 5, offset = 0, style='padding:10px;', selectInput(ns('countryOT'), 'Country', safetydata['country_slug'], selected = c('Vietnam'), multiple = FALSE))
+                         )
+                       )
+                ),
+                column(12, dataTableOutput(ns('rankingOverTime')),tags$br())
+      ),
+      
       tabPanel( "Peer Groups", tags$br(), 
       column(12,
         wellPanel(
@@ -57,18 +69,6 @@ rankingTableUI <- function(id) {
             )
         ),
       column(12, dataTableOutput(ns('rankingCustomResult')),tags$br())
-      ),
-      
-      # Compare the country over the time
-      tabPanel( "Rank over Time", tags$br(), 
-                column(12,
-                       wellPanel(
-                         fluidRow(
-                           column( width = 5, offset = 0, style='padding:10px;', selectInput(ns('countryOT'), 'Country', safetydata['country_slug'], selected = c('Vietnam'), multiple = FALSE))
-                         )
-                       )
-                ),
-                column(12, dataTableOutput(ns('rankingOverTime')),tags$br())
       )
     
     ) # fluidPage
