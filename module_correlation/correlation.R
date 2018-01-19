@@ -31,7 +31,7 @@ correlationScatterUI <- function(id) {
              ),
              
              # Download box
-             sidebarPanel( width = 12, tags$b("Download Dataset .CSV"),
+             sidebarPanel( width = 12, tags$b("Links"),
                            tags$br(),
                            htmlOutput(ns("dispDL"))
              )
@@ -203,11 +203,12 @@ correlationScatter <- function(input, output, session) {
   }) 
   
   output$dispDL <- renderText({
-    HTML(paste0('<a href="data/combined2000.csv" class="btn btn-primary btn-sm">2000</a>',
-                ' <a href="data/combined2005.csv" class="btn btn-primary btn-sm">2005</a>',
-                ' <a href="data/combined2010.csv" class="btn btn-primary btn-sm">2010</a>',
-                ' <a href="data/combined2015.csv" class="btn btn-primary btn-sm">2015</a>'
-    ))
+    HTML(paste0('<a href="https://github.com/Underwriters-Laboratories/safety_index_compare" 
+                class="btn btn-primary btn-sm", margin:50px > GitHub</a>', " ",
+                
+                '<a href="https://github.com/Lanbig/safety_index_compare/raw/master/asset/ulsafetyindex2017.zip" 
+                class="btn btn-primary btn-sm">Datasets</a>'
+                ))
     
   })
 }
