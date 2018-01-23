@@ -37,8 +37,8 @@ rankingTableUI <- function(id) {
           fluidRow(
             
             column( width = 2, offset = 0, style='padding:10px;', selectizeInput(ns('year'), 'Year', c('2000', '2005', '2010', '2016','2017'), selected = '2017')),
-            column( width = 5, offset = 0, style='padding:10px;', selectizeInput(ns('country'), 'Country', safetydata$country_slug, selected = 'Vietnam', multiple = FALSE)),
-            column( width = 5, offset = 0, style='padding:10px;', selectizeInput(ns('peergroup'), 'Peer Groups', c(
+            column( width = 4, offset = 0, style='padding:10px;', selectizeInput(ns('country'), 'Country', safetydata$country_slug, selected = 'Vietnam', multiple = FALSE)),
+            column( width = 4, offset = 0, style='padding:10px;', selectizeInput(ns('peergroup'), 'Peer Groups', c(
                                                                                                             'population_decile',
                                                                                                             'youth_population_group',
                                                                                                             'older_population_group',
@@ -50,7 +50,9 @@ rankingTableUI <- function(id) {
                                                                                                             'who_region',
                                                                                                             'iso_membership',
                                                                                                             'iec_membership'
-                                                                                                          ), selected = 'un_sub_region')) 
+                                                                                                          ), selected = 'un_sub_region')) ,
+            column( width = 2, offset = 0, style='padding:10px;', radioButtons(ns('display'), 'Display', c("Rank" = 1 ,"Rank and Score" = 2), selected=1)) 
+          
           )
         )
       ),
@@ -63,8 +65,9 @@ rankingTableUI <- function(id) {
         column(12,
            wellPanel(
              fluidRow(
-               column( width = 2, offset = 0, style='padding:10px;',  selectizeInput(ns('years'), 'Year', c('2000', '2005', '2010', '2016','2017'), selected = '2017')),
-               column( width = 10, offset = 0, style='padding:10px;', selectInput(ns('countries'), 'Country', safetydata['country_slug'], selected = c('Japan', 'Canada'), multiple = TRUE))
+               column( width = 2 , offset = 0, style='padding:10px;',  selectizeInput(ns('years'), 'Year', c('2000', '2005', '2010', '2016','2017'), selected = '2017')),
+               column( width = 8, offset = 0, style='padding:10px;', selectInput(ns('countries'), 'Country', safetydata['country_slug'], selected = c('Japan', 'Canada'), multiple = TRUE)),
+               column( width = 2 , offset = 0, style='padding:10px;', radioButtons(ns('displayc'), 'Display', c("Rank" = 1 ,"Rank and Score" = 2), selected=1)) 
              )
             )
         ),
@@ -195,6 +198,7 @@ rankingTable <- function(input, output, session){
                             'poisonings_rating_rank',
                             'transport_injuries_rating_rank')
   
+
   
   
   #Reactive - react from user selection - year
@@ -203,6 +207,7 @@ rankingTable <- function(input, output, session){
     year <- input$year
     country <- input$country
     peergroup <- input$peergroup
+    display <- input$display
     
     # Load data and filter data
     inputfile <- paste(here('asset/datasets/UL_safety_index_data_'),year,'.csv', sep = "")
@@ -212,13 +217,40 @@ rankingTable <- function(input, output, session){
     # Load data and filter data
     filterValue <- data[data$country_slug==country, eval(peergroup)]
     data <- data[,c(eval(peergroup),indicatorRatingList)]
-    data <- data[which(data[[1]] == filterValue),]
+    data <- data[which(data[[1]] == filterValue),-1]
     
-    # Compute ranking on the data subset
-    data_rank <- autoComputeRanking(data)
-    row.names(data_rank) <- data_rank[,'country_slug']
-    tdata <- t(data_rank[,-1])
-    tdata <- autoRenameIndicators(tdata)
+    #Compute ranking on the data subset
+    dataRank <- autoComputeRanking(data)
+    
+      
+    row.names(dataRank) <- dataRank[,'country_slug']
+    tdataRank <- t(dataRank[,-1])
+    tdataRank <- autoRenameIndicators(tdataRank)
+    
+    
+    if(display == 1){
+      tdataRank
+    } else {
+      tdataRate <- t(data[,-1])
+      tdataRankRateR = NULL
+      for(i in 1:ncol(tdataRate))
+      {
+        
+        tdataRankRate <- cbind(tdataRank[,i],round(tdataRate[,i],2))
+        colnames(tdataRankRate) <- c( eval(paste(colnames(tdataRank)[i],"Rank", sep = " ")), eval(paste(colnames(tdataRank)[i],"Score", sep = " ")) )
+        
+        if(is.null(tdataRankRateR)){
+          tdataRankRateR <- tdataRankRate
+        } else {
+          tdataRankRateR <- cbind(tdataRankRateR, tdataRankRate)
+        }
+        
+      }
+      
+      
+      tdataRankRateR
+      
+    }
     
   })  
   
@@ -246,6 +278,7 @@ rankingTable <- function(input, output, session){
     # Get input fron User Interface
     year <- input$years
     countries <- unlist(strsplit(input$countries, " "))
+    display <- input$displayc
     
     # Load data and filter data
     inputfile <- paste(here('asset/datasets/UL_safety_index_data_'),year,'.csv', sep = "")
@@ -259,9 +292,33 @@ rankingTable <- function(input, output, session){
     data_rank <- autoComputeRanking(data)
     
     row.names(data_rank) <- data_rank[,'country_slug']
-    tdata <- t(data_rank[,-1])
+    tdataRank <- t(data_rank[,-1])
     
-    tdata <- autoRenameIndicators(tdata)
+    tdataRank <- autoRenameIndicators(tdataRank)
+    
+    if(display == 1){
+      tdataRank
+    } else {
+      tdataRate <- t(data[,-1])
+      tdataRankRateR = NULL
+      for(i in 1:ncol(tdataRate))
+      {
+        
+        tdataRankRate <- cbind(tdataRank[,i],round(tdataRate[,i],2))
+        colnames(tdataRankRate) <- c( eval(paste(colnames(tdataRank)[i],"Rank", sep = " ")), eval(paste(colnames(tdataRank)[i],"Score", sep = " ")) )
+        
+        if(is.null(tdataRankRateR)){
+          tdataRankRateR <- tdataRankRate
+        } else {
+          tdataRankRateR <- cbind(tdataRankRateR, tdataRankRate)
+        }
+        
+      }
+      
+      
+      tdataRankRateR
+      
+    }    
     
   })  
   
